@@ -4,6 +4,34 @@ import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Carousel from "@/components/Carousel";
 import LandingNavbar from "@/components/LandingNavbar";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Mikki Trade International | Motors & Production Services in Kenya',
+  description: 'Leading provider of quality vehicles and professional production services in Kenya. Explore Mikki Trade Motors for cars and Mikki Trade Production for videography and photography.',
+  keywords: 'Mikki Trade, Kenya cars, car dealership Kenya, videography Kenya, production services Kenya',
+  openGraph: {
+    title: 'Mikki Trade International',
+    description: 'Quality vehicles and production services in Kenya',
+    url: 'https://mikkitrade.com',
+    siteName: 'Mikki Trade International',
+    images: [
+      {
+        url: '/logo-main.png',
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: 'en_KE',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Mikki Trade International',
+    description: 'Quality vehicles and production services in Kenya',
+    images: ['/logo-main.png'],
+  },
+};
 
 export default function Home() {
   return (

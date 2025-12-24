@@ -1,211 +1,346 @@
-import ContactUs from "@/components/ContactUs";
-import Gallery from "@/components/Gallery";
-import Hero from "@/components/Hero";
-import Banner from "@/components/motors/Banner";
-import NewArrivals from "@/components/motors/NewArrivals";
-import TopNavbar from "@/components/motors/TopNavbar";
-import { Main } from "next/document";
+'use client';
 
-import { Globe, Banknote, CalendarClock, Truck, UserCheck, Gavel, Wallet } from 'lucide-react'
-import Services from "@/components/motors/Services";
-import TopRanking from "@/components/motors/TopRanking";
-import ForYou from "@/components/motors/ForYou";
-import Deals from "@/components/Deals";
+import { useState, useEffect } from 'react';
+import Navbar from '@/components/motors/Navbar';
+import QuickFilters from '@/components/motors/QuickFilters';
+import FilterPanel, { VehicleFilters } from '@/components/motors/FilterPanel';
+import HeroCarousel from '@/components/motors/HeroCarousel';
+import VehicleCard from '@/components/motors/VehicleCard';
+import WhyUs from '@/components/motors/WhyUs';
+import { mockVehicles, getFeaturedVehicles, Vehicle } from '@/lib/mockVehicles';
 
-const slides = [
-    {
-        imageUrl: '/images/hero1.jpg',
-        title: 'Slide 1',
-        description: 'This is the first slide of the carousel.',
-        link: '/product/1',
-    },
-    {
-        imageUrl: '/images/hero2.jpg',
-        title: 'Slide 2',
-        description: 'This is the second slide of the carousel.',
-        link: '/product/2',
-    },
-    {
-        imageUrl: '/images/hero1.jpg',
-        title: 'Slide 3',
-        description: 'This is the third slide of the carousel.',
-        link: '/product/3',
-    },
-    {
-        imageUrl: '/images/hero2.jpg',
-        title: 'Slide 4',
-        description: 'This is the second slide of the carousel.',
-        link: '/product/2',
-    },
-    {
-        imageUrl: '/images/hero1.jpg',
-        title: 'Slide 5',
-        description: 'This is the third slide of the carousel.',
-        link: '/product/3',
-    },
-]
+interface QuickFilter {
+  id: string;
+  label: string;
+  value: string;
+  category: 'price' | 'year' | 'brand' | 'bodyType' | 'transmission' | 'fuelType';
+}
 
-const products = [
-    {
-        id: 1,
-        image: 'https://loremflickr.com/300/200/grape',
-        title: 'Cocktail',
-        description: 'Tropical mix of flavors, perfect for parties.',
-        price: 8.99,
-        link: 'https://lqrs.com',
-        tags: 'Local Used, Foreign Used, To Import, Locally Available, 3000CC, Manual, Automatic'
+export default function MikkiTradeMotorsPage() {
+  const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState('newest');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [activeQuickFilters, setActiveQuickFilters] = useState<QuickFilter[]>([]);
+  const [detailedFilters, setDetailedFilters] = useState<VehicleFilters | null>(null);
+  const [filteredVehicles, setFilteredVehicles] = useState<Vehicle[]>(mockVehicles);
+  const [savedVehicles, setSavedVehicles] = useState<Set<string>>(new Set());
 
-    },
-    {
-        id: 2,
-        image: 'https://loremflickr.com/300/200/apple',
-        title: 'Smoothie',
-        description: 'Refreshing blend of fruits and yogurt.',
-        price: 5.49,
-        link: 'https://lqrs.com',
-        tags: 'Local Used, Foreign Used, To Import, Locally Available, 3000CC, Manual, Automatic'
+  // Featured vehicles for hero carousel
+  const featuredVehicles = getFeaturedVehicles().map(v => ({
+    id: v.id,
+    make: v.make,
+    model: v.model,
+    year: v.year,
+    price: v.price,
+    oldPrice: v.oldPrice,
+    image: v.images[0],
+    tagline: v.tagline,
+    badge: v.badges?.[0],
+  }));
 
-    },
-    // More products...
-    {
-        id: 3,
-        image: `https://loremflickr.com/300/200/${encodeURIComponent('banana')}`,
-        title: 'Iced Coffee',
-        description: 'Cold brewed coffee with a hint of vanilla.',
-        price: 4.99,
-        link: 'https://lqrs.com',
-        tags: 'Local Used, Foreign Used, To Import, Locally Available, 3000CC, Manual, Automatic'
+  // Filter and sort vehicles
+  useEffect(() => {
+    let filtered = [...mockVehicles];
 
-    },
-    {
-        id: 4,
-        image: `https://loremflickr.com/300/200/${encodeURIComponent('berry')}`,
-        title: 'Mojito',
-        description: 'Classic Cuban cocktail with mint and lime.',
-        price: 7.99,
-        link: 'https://lqrs.com',
-        tags: 'Local Used, Foreign Used, To Import, Locally Available, 3000CC, Manual, Automatic'
+    // Apply search query
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        v =>
+          v.make.toLowerCase().includes(query) ||
+          v.model.toLowerCase().includes(query) ||
+          `${v.year}`.includes(query)
+      );
+    }
 
-    },
-    {
-        id: 5,
-        image: `https://loremflickr.com/300/200/${encodeURIComponent('orange')}`,
-        title: 'Matcha Latte',
-        description: 'Creamy green tea latte, rich in antioxidants.',
-        price: 6.49,
-        link: 'https://lqrs.com',
-        tags: 'Local Used, Foreign Used, To Import, Locally Available, 3000CC, Manual, Automatic'
+    // Apply quick filters
+    activeQuickFilters.forEach(filter => {
+      switch (filter.category) {
+        case 'price':
+          if (filter.value.startsWith('<')) {
+            const max = parseInt(filter.value.substring(1));
+            filtered = filtered.filter(v => v.price < max);
+          } else if (filter.value.startsWith('>')) {
+            const min = parseInt(filter.value.substring(1));
+            filtered = filtered.filter(v => v.price > min);
+          } else if (filter.value.includes('-')) {
+            const [min, max] = filter.value.split('-').map(n => parseInt(n));
+            filtered = filtered.filter(v => v.price >= min && v.price <= max);
+          }
+          break;
+        case 'year':
+          filtered = filtered.filter(v => v.year === parseInt(filter.value));
+          break;
+        case 'brand':
+          filtered = filtered.filter(v => v.make === filter.value);
+          break;
+        case 'bodyType':
+          filtered = filtered.filter(v => v.bodyType === filter.value);
+          break;
+        case 'transmission':
+          filtered = filtered.filter(v => v.transmission === filter.value);
+          break;
+        case 'fuelType':
+          filtered = filtered.filter(v => v.fuelType === filter.value);
+          break;
+      }
+    });
 
-    },
-    {
-        id: 6,
-        image: `https://loremflickr.com/300/200/${encodeURIComponent('peach')}`,
-        title: 'Fruit Punch',
-        description: 'Sweet and tangy punch, bursting with fruity flavors.',
-        price: 3.99,
-        link: 'https://lqrs.com',
-        tags: 'Local Used, Foreign Used, To Import, Locally Available, 3000CC, Manual, Automatic'
+    // Apply detailed filters
+    if (detailedFilters) {
+      // Price range
+      if (detailedFilters.priceRange.min > 0 || detailedFilters.priceRange.max < 20000000) {
+        filtered = filtered.filter(
+          v =>
+            v.price >= detailedFilters.priceRange.min &&
+            v.price <= detailedFilters.priceRange.max
+        );
+      }
 
-    },
-    {
-        id: 7,
-        image: `https://loremflickr.com/300/200/${encodeURIComponent('cherry')}`,
-        title: 'Bubble Tea',
-        description: 'Chewy tapioca pearls in a sweet milk tea base.',
-        price: 4.99,
-        link: 'https://lqrs.com',
-        tags: 'Local Used, Foreign Used, To Import, Locally Available, 3000CC, Manual, Automatic'
-    },
-]
+      // Year range
+      if (detailedFilters.yearRange.min > 2000 || detailedFilters.yearRange.max < 2025) {
+        filtered = filtered.filter(
+          v =>
+            v.year >= detailedFilters.yearRange.min &&
+            v.year <= detailedFilters.yearRange.max
+        );
+      }
 
-const services = [
-    {
-        title: 'Japan Auction Access',
-        description: 'We’re connected to 200+ Japanese auctions and have access to most Japanese dealers stock, giving you a wide selection of high- quality vehicles at competitive prices.',
-        color: '#7c3aed', // Violet
-        icon: <Gavel className="w-6 h-6" />,
-    },
-    {
-        title: 'Free Consultation',
-        description: 'Get expert advice on budgeting, deposits, financing, and vehicle clearance—at no cost.',
-        color: '#2C3E50', // Midnight Blue
-        icon: <UserCheck className="w-6 h-6" />,
-    },
-    {
-        title: 'Dual Market Stock',
-        description: 'Skip the middlemen and choose from a wide selection of vehicles already in Kenya or directly from Japan—reliable, fast, and transparent.',
-        color: '#2563eb', // Blue
-        icon: <Globe className="w-6 h-6" />,
-    },
-    {
-        title: 'Partial Payments',
-        description: 'Make payments in stages to ease your financial burden pay 50% on booking and the remaining 50% upon arrival or delivery of your vehicle.',
-        color: '#059669', // Emerald
-        icon: <Wallet className="w-6 h-6" />,
-    },
-    {
-        title: 'Doorstep Delivery',
-        description: 'From buying in Japan to shipping, customs clearance, and doorstep delivery—we handle it all for a smooth, stress- free experience.',
-        color: '#f59e0b', // Amber
-        icon: <Truck className="w-6 h-6" />,
-    },
-    {
-        title: 'Flexible Financing',
-        description: 'With as little as a 50% deposit, enjoy extended payment periods of up to 2 year.',
-        color: '#dc2626', // Red
-        icon: <CalendarClock className="w-6 h-6" />,
-    },
-    {
-        title: 'Payment Options',
-        description: 'You can make payment to our local office in Kenya, and we’ll handle the transfer to Japan on your behalf. Prefer to manage it yourself? Send payment directly to Japan and take care of customs personally—with full transparency every step of the way.',
-        color: '#34495E', // Slate Gray
-        icon: <Banknote className="w-6 h-6" />,
-    },
-]
-//     {
-//         id: 1,
-//         title: "20% off every Product",
-//         subtitle: "Black Friday Sale",
-//         ctaText: "Buy now",
-//         icon: null,
-//         image: "/images/deal1.png",
-//         link: "#"
-//     },
-//     {
-//         id: 2,
-//         title: "Free Delivery on All Orders",
-//         subtitle: "Holiday Special",
-//         ctaText: "Shop now",
-//         image: "/images/deal2.png",
-//         icon: null,
-//         link: "#"
-//     },
-//     {
-//         id: 3,
-//         title: "Exclusive Deals on SUVs",
-//         subtitle: "Car Import Offer",
-//         ctaText: "Explore",
-//         image: "/images/deal3.png",
-//         icon: null,
-//         link: "#"
-//     }
-// ];
+      // Mileage range
+      if (detailedFilters.mileageRange.min > 0 || detailedFilters.mileageRange.max < 200000) {
+        const mileageInKm = (v: Vehicle) => {
+          const match = v.mileage.match(/[\d,]+/);
+          return match ? parseInt(match[0].replace(/,/g, '')) : 0;
+        };
+        filtered = filtered.filter(
+          v =>
+            mileageInKm(v) >= detailedFilters.mileageRange.min &&
+            mileageInKm(v) <= detailedFilters.mileageRange.max
+        );
+      }
 
-export default function LandingMotorsPage() {
-    return (
-        <div>
-            <TopNavbar />
+      // Multi-select filters
+      if (detailedFilters.brands.length > 0) {
+        filtered = filtered.filter(v => detailedFilters.brands.includes(v.make));
+      }
+      if (detailedFilters.bodyTypes.length > 0) {
+        filtered = filtered.filter(v => detailedFilters.bodyTypes.includes(v.bodyType));
+      }
+      if (detailedFilters.transmissions.length > 0) {
+        filtered = filtered.filter(v => detailedFilters.transmissions.includes(v.transmission));
+      }
+      if (detailedFilters.fuelTypes.length > 0) {
+        filtered = filtered.filter(v => detailedFilters.fuelTypes.includes(v.fuelType));
+      }
+      if (detailedFilters.colors.length > 0) {
+        filtered = filtered.filter(v => detailedFilters.colors.includes(v.color));
+      }
+      if (detailedFilters.condition.length > 0) {
+        filtered = filtered.filter(v => detailedFilters.condition.includes(v.condition));
+      }
+      if (detailedFilters.features.length > 0) {
+        filtered = filtered.filter(v =>
+          detailedFilters.features.some(feature => v.features.includes(feature))
+        );
+      }
+    }
 
-            <Banner slides={slides} />
+    // Apply sorting
+    switch (sortBy) {
+      case 'newest':
+        filtered.sort((a, b) => b.year - a.year || new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        break;
+      case 'price-low':
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case 'price-high':
+        filtered.sort((a, b) => b.price - a.price);
+        break;
+      case 'year-new':
+        filtered.sort((a, b) => b.year - a.year);
+        break;
+      case 'year-old':
+        filtered.sort((a, b) => a.year - b.year);
+        break;
+      case 'mileage':
+        filtered.sort((a, b) => {
+          const getMileage = (v: Vehicle) => {
+            const match = v.mileage.match(/[\d,]+/);
+            return match ? parseInt(match[0].replace(/,/g, '')) : 0;
+          };
+          return getMileage(a) - getMileage(b);
+        });
+        break;
+    }
 
-            <Services services={services} />
+    setFilteredVehicles(filtered);
+  }, [searchQuery, sortBy, activeQuickFilters, detailedFilters]);
 
-            <NewArrivals products={products} />
-            
-            <Deals />
+  const handleQuickFilterSelect = (filter: QuickFilter) => {
+    setActiveQuickFilters(prev => {
+      const exists = prev.find(f => f.id === filter.id);
+      if (exists) {
+        return prev.filter(f => f.id !== filter.id);
+      } else {
+        // Remove other filters of the same category for single-select categories
+        if (['transmission', 'fuelType'].includes(filter.category)) {
+          return [...prev.filter(f => f.category !== filter.category), filter];
+        }
+        return [...prev, filter];
+      }
+    });
+  };
 
-            <ForYou />
+  const handleClearAllQuickFilters = () => {
+    setActiveQuickFilters([]);
+  };
 
+  const handleSaveToggle = (id: string) => {
+    setSavedVehicles(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
+
+  const activeFilterCount =
+    activeQuickFilters.length +
+    (detailedFilters ? Object.values(detailedFilters).filter((v: any) =>
+      Array.isArray(v) ? v.length > 0 : false
+    ).length : 0);
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Navbar */}
+      <Navbar
+        onFilterClick={() => setIsFilterPanelOpen(true)}
+        onSearchChange={setSearchQuery}
+        onSortChange={setSortBy}
+        onViewChange={setViewMode}
+        activeFiltersCount={activeFilterCount}
+      />
+
+      {/* Hero Carousel - Featured Vehicles */}
+      <div className="mt-16 md:mt-20">
+        <HeroCarousel vehicles={featuredVehicles} autoPlayInterval={6000} />
+      </div>
+
+      {/* Quick Filters */}
+      <QuickFilters
+        onFilterSelect={handleQuickFilterSelect}
+        activeFilters={activeQuickFilters}
+        onClearAll={handleClearAllQuickFilters}
+      />
+
+      {/* Main Content - Vehicle Grid */}
+      <div className="container mx-auto px-4 md:px-8 py-8">
+        {/* Results Header */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+              Available Vehicles
+            </h1>
+            <p className="text-gray-600">
+              Showing {filteredVehicles.length} of {mockVehicles.length} vehicles
+              {searchQuery && (
+                <span className="font-semibold"> matching "{searchQuery}"</span>
+              )}
+            </p>
+          </div>
+
+          {/* Desktop Sort (mobile sort is in navbar) */}
+          <div className="hidden md:block mt-4 md:mt-0">
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#a235c3] focus:border-transparent bg-white text-gray-900"
+              aria-label="Sort vehicles by"
+            >
+              <option value="newest">Newest First</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="year-new">Year: Newest</option>
+              <option value="year-old">Year: Oldest</option>
+              <option value="mileage">Mileage: Low to High</option>
+            </select>
+          </div>
         </div>
-    );
+
+        {/* No Results Message */}
+        {filteredVehicles.length === 0 && (
+          <div className="text-center py-16">
+            <div className="text-6xl mb-4">🚗</div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              No vehicles found
+            </h2>
+            <p className="text-gray-600 mb-6">
+              Try adjusting your filters or search query
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                setSearchQuery('');
+                setActiveQuickFilters([]);
+                setDetailedFilters(null);
+              }}
+              className="px-6 py-3 bg-gradient-to-r from-[#a235c3] to-[#2b404f] text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+            >
+              Clear All Filters
+            </button>
+          </div>
+        )}
+
+        {/* Vehicle Grid/List */}
+        {filteredVehicles.length > 0 && (
+          <div
+            className={
+              viewMode === 'grid'
+                ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
+                : 'flex flex-col gap-6'
+            }
+          >
+            {filteredVehicles.map(vehicle => (
+              <VehicleCard
+                key={vehicle.id}
+                vehicle={{
+                  ...vehicle,
+                  isSaved: savedVehicles.has(vehicle.id),
+                }}
+                viewMode={viewMode}
+                onSaveToggle={handleSaveToggle}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Load More (Future Enhancement) */}
+        {filteredVehicles.length > 0 && filteredVehicles.length >= 12 && (
+          <div className="text-center mt-12">
+            <button
+              type="button"
+              className="px-8 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+            >
+              Load More Vehicles
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Why Choose Us Section */}
+      <WhyUs />
+
+      {/* Filter Panel Slide-over */}
+      <FilterPanel
+        isOpen={isFilterPanelOpen}
+        onClose={() => setIsFilterPanelOpen(false)}
+        onApplyFilters={(filters) => setDetailedFilters(filters)}
+        initialFilters={detailedFilters || undefined}
+      />
+    </div>
+  );
 }

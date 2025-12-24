@@ -1,113 +1,107 @@
+import ProductionNavbar from "@/components/production/Navbar";
+import ComingSoon from "@/components/ComingSoon";
 import ContactUs from "@/components/ContactUs";
-import Gallery from "@/components/Gallery";
-import Hero from "@/components/Hero";
-import { Main } from "next/document";
 
 export default function ProductionPage() {
     return (
-        <div>
-            <Hero variant="motors" />
+        <div className="min-h-screen bg-gray-50">
+            <ProductionNavbar />
 
-            <div>
-                {/* <!-- ABOUT Section --> */}
-                <div className="w-full lg:h-screen h-full m-auto flex items-center justify-cetner py-20">
-                    <div className="w-full h-full flex flex-col justify-center items-center sm:px-4 px-2">
-                        {/* <!--  --> */}
-                        <div className="lg:w-[90%] w-full mx-auto flex flex-col lg:gap-6 lg:flex-row items-center justify-center ">
-                            <div className="relative">
-                                {/* <!-- Side Img 1 --> */}
-                                <img className="absolute z-20 lg:left-[2rem] -top-4 left-[1rem] lg:w-[8rem] lg:h-[8rem] sm:w-[6rem] sm:h-[6rem] w-[3rem] h-[3rem] rounded-full" src="https://images.unsplash.com/photo-1496483648148-47c686dc86a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw3fHxmbG93ZXJ8ZW58MHwwfHx8MTcyMDk0OTQ2MHww&ixlib=rb-4.0.3&q=80&w=1080" alt="Side Image" />
-
-                                {/* <!-- Side Img 2 --> */}
-                                <img className="absolute z-20 lg:top-[12rem] sm:top-[11rem] top-[5rem] sm:-left-[3rem] -left-[2rem] lg:w-[8rem] lg:h-[8rem] sm:w-[6rem] sm:h-[6rem] w-[3rem] h-[3rem] rounded-full" src="https://images.unsplash.com/photo-1558281033-19cead6981dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwxMHx8Zmxvd2VyfGVufDB8MHx8fDE3MjA5NDk0NjB8MA&ixlib=rb-4.0.3&q=80&w=1080" alt="Side Image 2" />
-
-                                {/* <!-- Side Img 3 --> */}
-                                <img className="absolute z-20 lg:top-[23rem] sm:top-[20.5rem] top-[10.5rem] left-[2rem] lg:w-[8rem] lg:h-[8rem] sm:w-[6rem] sm:h-[6rem] w-[3rem] h-[3rem] rounded-full" src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwxfHxmbG93ZXJ8ZW58MHwwfHx8MTcyMDk0OTQ2MHww&ixlib=rb-4.0.3&q=80&w=1080" alt="Side Image 3" />
-
-                                {/* <!-- Main Img --> */}
-                                <img
-                                    className="rounded-full relative object-cover right-0 lg:w-[30rem] lg:h-[30rem] sm:w-[25rem] sm:h-[25rem] w-[12rem] h-[12rem] outline sm:outline-offset-[.77em] outline-offset-[.37em] outline-green-500"
-                                    src="https://images.unsplash.com/photo-1507290439931-a861b5a38200?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwxM3x8Zmxvd2VyfGVufDB8MHx8fDE3MjA5NDk0NjB8MA&ixlib=rb-4.0.3&q=80&w=1080" alt="About us" />
-                            </div>
-                            {/* <!--  --> */}
-                            <div
-                                className="lg:w-[60%] bg-gray-800 p-4 w-full h-fit shadow-xl shadow-green-300/40 flex flex-col justify-center items-center sm:px-6 px-4 rounded-xl">
-                                <h2 className="text-4xl text-center text-green-600 font-bold px-4 py-1 md:mt-0 mt-10">
-                                    About Us
-                                </h2>
-                                <p className="md:text-3xl text-2xl text-center font-bold my-5">We are
-                                    Mikki Trade Motors
-                                </p>
-                                <p className="md:text-xl sm:text-lg text-base mt-2 text-justify sm:px-2">At Petal Haven,
-                                    we believe in the transformative power of flowers. Our blooms are not just arrangements; they are
-                                    expressions of beauty, joy, and emotion. From elegant bouquets to enchanting floral designs, we
-                                    curate every creation with precision and care. Whether it's a celebration, a gesture of love, or a
-                                    moment of solace, Petal Haven's exquisite flowers speak a language of their own, bringing nature's
-                                    beauty to your doorstep. Experience the enchantment of Petal Haven and let flowers tell your story.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+            {/* Hero Section */}
+            <div className="relative min-h-[70vh] flex items-center justify-center bg-gradient-to-br from-[#2b404f] via-[#3d5a6f] to-[#a235c3] overflow-hidden">
+                <div className="absolute inset-0 opacity-10">
+                    <div className="absolute inset-0" style={{
+                        backgroundImage: `repeating-linear-gradient(
+                            0deg,
+                            transparent,
+                            transparent 2px,
+                            rgba(255,255,255,0.03) 2px,
+                            rgba(255,255,255,0.03) 4px
+                        ),
+                        repeating-linear-gradient(
+                            90deg,
+                            transparent,
+                            transparent 2px,
+                            rgba(255,255,255,0.03) 2px,
+                            rgba(255,255,255,0.03) 4px
+                        )`
+                    }}></div>
                 </div>
 
-                <div className="text-gray-800 p-6">
-                    <div className="max-w-7xl mx-auto">
-                        {/* <!-- Title --> */}
-                        <div className="text-center mb-10">
-                            <h1 className="text-3xl font-bold">Meet Our Team</h1>
-                            <p className="text-gray-800">Our dedicated team of professionals is here to help you succeed.</p>
-                        </div>
+                <div className="relative z-10 text-center px-4 md:px-8 max-w-4xl mx-auto">
+                    <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+                        Mikki Trade<br />
+                        <span className="text-[#a235c3]">Production</span>
+                    </h1>
+                    <p className="text-xl md:text-3xl text-white/90 mb-8 font-light">
+                        Capturing Moments, Creating Magic
+                    </p>
+                    <div className="mb-8">
+                        <ComingSoon size="large" />
+                    </div>
+                    <p className="text-white/80 text-lg max-w-2xl mx-auto">
+                        Professional videography, photography, and production services launching soon.
+                        Stay tuned for something extraordinary.
+                    </p>
+                </div>
+            </div>
 
-                        {/* <!-- Team Members Grid --> */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {/* <!-- Team Member Card --> */}
-                            <div className="bg-gray-800 shadow-lg rounded-lg overflow-hidden">
-                                <img src="https://res.cloudinary.com/djv4xa6wu/image/upload/v1735722161/AbhirajK/Abhirajk2.webp" alt="Team Member 1" className="w-full h-48 object-cover" />
-                                    <div className="p-6">
-                                        <h2 className="text-xl font-semibold">John Doe</h2>
-                                        <p className="text-white">Full-Stack Developer</p>
-                                        <div className="flex items-center mt-4 space-x-3">
-                                            <a href="#" className="text-blue-500 hover:text-blue-300">[Facebook]</a>
-                                            <a href="#" className="text-blue-400 hover:text-blue-300">[Twitter]</a>
-                                            <a href="#" className="text-gray-600 hover:text-gray-300">[Email]</a>
-                                        </div>
-                                    </div>
-                            </div>
+            {/* Services Preview Section */}
+            <div id="services" className="py-20 bg-white">
+                <div className="max-w-7xl mx-auto px-4 md:px-8">
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Services</h2>
+                        <p className="text-gray-600 text-lg mb-6">
+                            Coming soon: Comprehensive production solutions for your creative vision
+                        </p>
+                        <ComingSoon />
+                    </div>
 
-                            {/* <!-- Duplicate the above block for other team members --> */}
-                            <div className="bg-gray-800 shadow-lg rounded-lg overflow-hidden">
-                                <img src="https://res.cloudinary.com/djv4xa6wu/image/upload/v1735722161/AbhirajK/Abhirajk3.webp" alt="Team Member 2" className="w-full h-48 object-cover" />
-                                    <div className="p-6">
-                                        <h2 className="text-xl font-semibold">Jane Smith</h2>
-                                        <p className="text-white">UI/UX Designer</p>
-                                        <div className="flex items-center mt-4 space-x-3">
-                                            <a href="#" className="text-blue-500 hover:text-blue-300">[Facebook]</a>
-                                            <a href="#" className="text-blue-400 hover:text-blue-300">[Twitter]</a>
-                                            <a href="#" className="text-gray-600 hover:text-gray-300">[Email]</a>
-                                        </div>
-                                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+                        {['Videography', 'Photography', 'Advertising', 'Film Production'].map((service) => (
+                            <div key={service} className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl p-8 text-center">
+                                <div className="w-16 h-16 bg-gradient-to-r from-[#a235c3] to-[#2b404f] rounded-full mx-auto mb-4 flex items-center justify-center opacity-20">
+                                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                                <h3 className="text-lg font-semibold text-gray-400">{service}</h3>
                             </div>
-
-                            <div className="bg-gray-800 shadow-lg rounded-lg overflow-hidden">
-                                <img src="https://res.cloudinary.com/djv4xa6wu/image/upload/v1735722163/AbhirajK/Abhirajk%20mykare.webp" alt="Team Member 3" className="w-full h-48 object-cover" />
-                                    <div className="p-6">
-                                        <h2 className="text-xl font-semibold">Alex Johnson</h2>
-                                        <p className="text-white">Project Manager</p>
-                                        <div className="flex items-center mt-4 space-x-3">
-                                            <a href="#" className="text-blue-500 hover:text-blue-300">[Facebook]</a>
-                                            <a href="#" className="text-blue-400 hover:text-blue-300">[Twitter]</a>
-                                            <a href="#" className="text-gray-600 hover:text-gray-300">[Email]</a>
-                                        </div>
-                                    </div>
-                            </div>
-                        </div>
+                        ))}
                     </div>
                 </div>
             </div>
 
-            <Gallery />
+            {/* Portfolio Section */}
+            <div id="portfolio" className="py-20 bg-gray-50">
+                <div className="max-w-7xl mx-auto px-4 md:px-8">
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Portfolio</h2>
+                        <p className="text-gray-600 text-lg mb-6">
+                            Our showcase of exceptional work is being curated
+                        </p>
+                        <ComingSoon />
+                    </div>
+                </div>
+            </div>
 
-            <ContactUs />
+            {/* Team Section */}
+            <div id="team" className="py-20 bg-white">
+                <div className="max-w-7xl mx-auto px-4 md:px-8">
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Meet Our Team</h2>
+                        <p className="text-gray-600 text-lg mb-6">
+                            Talented professionals dedicated to bringing your vision to life
+                        </p>
+                        <ComingSoon />
+                    </div>
+                </div>
+            </div>
+
+            {/* Contact Section */}
+            <div id="contact">
+                {/* <ContactUs /> */}
+            </div>
         </div>
     );
 }

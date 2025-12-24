@@ -6,14 +6,14 @@ import Link from 'next/link';
 
 const images = [
     {
-        src: '/images/hero1.jpg',
+        src: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1920&h=1080&fit=crop&q=80',
         alt: 'Mikki Trade Motors',
         title: 'Mikki Trade Motors',
         description: 'Innovative automobile solutions built for Africa.\nReliable, efficient, and future-ready.',
         link: '/mikki-trade-motors'
     },
     {
-        src: '/images/hero2.jpg',
+        src: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1920&h=1080&fit=crop&q=80',
         alt: 'Mikki Trade Production',
         title: 'Mikki Trade Production',
         description: 'Creative media production for brands and storytellers. \nDelivering quality visuals, sound, and content with purpose.',
@@ -38,7 +38,7 @@ const Carousel = () => {
                     key={index}
                     className={`absolute inset-0 transition-opacity duration-1000 ${index === current ? 'opacity-100 z-0' : 'opacity-0 z-0'}`}
                 >
-                    <Image src={image.src} alt={image.alt} layout="fill" objectFit="cover" priority />
+                    <Image src={image.src} alt={image.alt} fill className="object-cover" priority />
                     {index === current && (
                         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 bg-black/40 text-white">
                             <h1 className="text-4xl sm:text-5xl font-extrabold mb-4 drop-shadow-lg">
