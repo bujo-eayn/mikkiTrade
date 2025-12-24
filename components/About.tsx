@@ -13,8 +13,8 @@ const AboutCard: React.FC<AboutCardProps> = ({ title, description }) => (
             <div className="rounded bg-gray-800 p-4 transform translate-x-6 -translate-y-6">
                 <div className="flex-grow">
                     <h2 className="text-2xl title-font font-semibold mb-2">{title}</h2>
-                    <div className="w-12 h-1 bg-indigo-500 mb-4" />
-                    <p className="leading-relaxed text-sm text-justify">
+                    <div className="w-12 h-1 bg-fuchsia-700 mb-4" />
+                    <p className="leading-relaxed text-sm text-left">
                         {description}
                     </p>
                 </div>
@@ -47,7 +47,7 @@ const About: React.FC<AboutSectionProps> = ({
     }, []);
 
     return (
-        <section className="">
+        <section id="about" className="">
             <div className="max-w-6xl mx-auto px-5 py-24">
                 <div className="text-center mb-20">
                     <h1 className="title-font text-black mb-4 text-3xl font-extrabold leading-10 tracking-tight sm:text-5xl sm:leading-none md:text-5xl">
@@ -57,7 +57,7 @@ const About: React.FC<AboutSectionProps> = ({
                         {subtitle}
                     </p>
                     <div className="flex mt-6 justify-center">
-                        <div className="w-16 h-1 rounded-full bg-indigo-500 inline-flex" />
+                        <div className="w-16 h-1 rounded-full bg-fuchsia-700 inline-flex" />
                     </div>
                 </div>
 

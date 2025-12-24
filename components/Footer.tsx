@@ -5,16 +5,16 @@ const Footer = () => {
     const currentYear = new Date().getFullYear();
 
     return (
-        <footer className="text-white py-10 mt-20">
+        <footer className="text-black py-10 mt-20">
             <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-evenly gap-10">
                 {/* Brands Section */}
                 <div className="flex flex-col items-center text-center">
-                    <h4 className="font-bold mb-2">Brands</h4>
+                    <h4 className="font-bold mb-2 text-fuchsia-700">Brands</h4>
                     <ul className="flex gap-4 flex-wrap justify-center">
                         <li>
                             <Link
                                 href="/mikki-trade-motors"
-                                className="transition-all duration-300 transform hover:scale-105 hover:shadow-md hover:text-gray-300 hover:underline"
+                                className="transition-all duration-300 transform hover:scale-105 hover:shadow-md hover:text-fuchsia-700 hover:underline"
                             >
                                 Mikki Trade Motors
                             </Link>
@@ -22,7 +22,7 @@ const Footer = () => {
                         <li>
                             <Link
                                 href="/mikki-trade-production"
-                                className="transition-all duration-300 transform hover:scale-105 hover:shadow-md hover:text-gray-300 hover:underline"
+                                className="transition-all duration-300 transform hover:scale-105 hover:shadow-md hover:text-fuchsia-700 hover:underline"
                             >
                                 Mikki Trade Production
                             </Link>
@@ -32,30 +32,33 @@ const Footer = () => {
 
                 {/* Socials Section */}
                 <div className="flex flex-col items-center text-center">
-                    <h4 className="font-bold mb-2">Follow Us</h4>
+                    <h4 className="font-bold mb-2 text-fuchsia-700">Follow Us</h4>
                     <ul className="flex gap-4 flex-wrap justify-center">
                         <li>
                             <a
-                                href="#"
-                                className="transition-all duration-300 transform hover:scale-105 hover:shadow-md hover:text-gray-300 hover:underline"
+                                href="https://www.facebook.com/people/Mikkitrade-Int-Ltd/100065314238004/"
+                                target="_blank" rel="noopener noreferrer"
+                                className="transition-all duration-300 transform hover:scale-105 hover:shadow-md hover:text-fuchsia-700 hover:underline"
                             >
                                 Facebook
                             </a>
                         </li>
                         <li>
                             <a
-                                href="#"
-                                className="transition-all duration-300 transform hover:scale-105 hover:shadow-md hover:text-gray-300 hover:underline"
+                                href="https://www.instagram.com/mikkitrade_int"
+                                target="_blank" rel="noopener noreferrer"
+                                className="transition-all duration-300 transform hover:scale-105 hover:shadow-md hover:text-fuchsia-700 hover:underline"
                             >
                                 Instagram
                             </a>
                         </li>
                         <li>
                             <a
-                                href="#"
-                                className="transition-all duration-300 transform hover:scale-105 hover:shadow-md hover:text-gray-300 hover:underline"
+                                href="http://tiktok.com/@mikkitrade.int"
+                                target="_blank" rel="noopener noreferrer"
+                                className="transition-all duration-300 transform hover:scale-105 hover:shadow-md hover:text-fuchsia-700 hover:underline"
                             >
-                                LinkedIn
+                                TikTok
                             </a>
                         </li>
                     </ul>
@@ -63,12 +66,13 @@ const Footer = () => {
 
                 {/* Get In Touch Section */}
                 <div className="flex flex-col items-center text-center">
-                    <h4 className="font-bold mb-2">Get in touch</h4>
+                    <h4 className="font-bold mb-2 text-fuchsia-700">Get in touch</h4>
                     <ul className="flex gap-4 flex-wrap justify-center">
-                        <li className="font-semibold mt-1">+(1) 123 456 7890</li>
+                        <li className="font-semibold mt-1">+(254) 708 149 430</li>
                         <li><a
                             href="mailto:support@mikkitrade.com"
-                            className="transition-all duration-300 transform hover:scale-105 hover:shadow-md hover:text-gray-300 hover:underline"
+                            target="_blank" rel="noopener noreferrer"
+                            className="transition-all duration-300 transform hover:scale-105 hover:shadow-md hover:text-fuchsia-700 hover:underline"
                         >
                             support@mikkitrade.com
                         </a></li>
@@ -77,22 +81,24 @@ const Footer = () => {
 
                 {/* Locations Section */}
                 <div className="flex flex-col items-center text-center">
-                    <h4 className="font-bold mb-2">Locations</h4>
+                    <h4 className="font-bold mb-2 text-fuchsia-700">Locations</h4>
                     <ul className="flex gap-4 flex-wrap justify-center">
                         <li>
                             <Link
-                                href="/mikki-trade-motors"
-                                className="transition-all duration-300 transform hover:scale-105 hover:shadow-md hover:text-gray-300 hover:underline"
+                                href="https://maps.app.goo.gl/TkzoN6nKz2urwuNTA"
+                                target="_blank" rel="noopener noreferrer"
+                                className="transition-all duration-300 transform hover:scale-105 hover:shadow-md hover:text-fuchsia-700 hover:underline"
                             >
-                                Mikki Trade Motors
+                                Mikki Trade Motors <br /> Milimani Business Park, Nairobi, Kenya
                             </Link>
                         </li>
                         <li>
                             <Link
-                                href="/mikki-trade-production"
-                                className="transition-all duration-300 transform hover:scale-105 hover:shadow-md hover:text-gray-300 hover:underline"
+                                href="https://maps.app.goo.gl/TkzoN6nKz2urwuNTA"
+                                target="_blank" rel="noopener noreferrer"
+                                className="transition-all duration-300 transform hover:scale-105 hover:shadow-md hover:text-fuchsia-700 hover:underline"
                             >
-                                Mikki Trade Production
+                                Mikki Trade Production <br /> Milimani Business Park, Nairobi, Kenya
                             </Link>
                         </li>
                     </ul>
@@ -113,7 +119,7 @@ const Footer = () => {
                         href="https://itedasolutions.com"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="transition-all duration-300 transform hover:scale-105 hover:shadow-md hover:text-gray-300 hover:underline"
+                        className="transition-all duration-300 transform hover:scale-105 hover:shadow-md hover:text-fuchsia-700 hover:underline"
                     >
                         ITEDA Solutions
                     </a>

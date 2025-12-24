@@ -1,113 +1,211 @@
 import ContactUs from "@/components/ContactUs";
 import Gallery from "@/components/Gallery";
 import Hero from "@/components/Hero";
+import Banner from "@/components/motors/Banner";
+import NewArrivals from "@/components/motors/NewArrivals";
+import TopNavbar from "@/components/motors/TopNavbar";
 import { Main } from "next/document";
 
-export default function MotorsPage() {
+import { Globe, Banknote, CalendarClock, Truck, UserCheck, Gavel, Wallet } from 'lucide-react'
+import Services from "@/components/motors/Services";
+import TopRanking from "@/components/motors/TopRanking";
+import ForYou from "@/components/motors/ForYou";
+import Deals from "@/components/Deals";
+
+const slides = [
+    {
+        imageUrl: '/images/hero1.jpg',
+        title: 'Slide 1',
+        description: 'This is the first slide of the carousel.',
+        link: '/product/1',
+    },
+    {
+        imageUrl: '/images/hero2.jpg',
+        title: 'Slide 2',
+        description: 'This is the second slide of the carousel.',
+        link: '/product/2',
+    },
+    {
+        imageUrl: '/images/hero1.jpg',
+        title: 'Slide 3',
+        description: 'This is the third slide of the carousel.',
+        link: '/product/3',
+    },
+    {
+        imageUrl: '/images/hero2.jpg',
+        title: 'Slide 4',
+        description: 'This is the second slide of the carousel.',
+        link: '/product/2',
+    },
+    {
+        imageUrl: '/images/hero1.jpg',
+        title: 'Slide 5',
+        description: 'This is the third slide of the carousel.',
+        link: '/product/3',
+    },
+]
+
+const products = [
+    {
+        id: 1,
+        image: 'https://loremflickr.com/300/200/grape',
+        title: 'Cocktail',
+        description: 'Tropical mix of flavors, perfect for parties.',
+        price: 8.99,
+        link: 'https://lqrs.com',
+        tags: 'Local Used, Foreign Used, To Import, Locally Available, 3000CC, Manual, Automatic'
+
+    },
+    {
+        id: 2,
+        image: 'https://loremflickr.com/300/200/apple',
+        title: 'Smoothie',
+        description: 'Refreshing blend of fruits and yogurt.',
+        price: 5.49,
+        link: 'https://lqrs.com',
+        tags: 'Local Used, Foreign Used, To Import, Locally Available, 3000CC, Manual, Automatic'
+
+    },
+    // More products...
+    {
+        id: 3,
+        image: `https://loremflickr.com/300/200/${encodeURIComponent('banana')}`,
+        title: 'Iced Coffee',
+        description: 'Cold brewed coffee with a hint of vanilla.',
+        price: 4.99,
+        link: 'https://lqrs.com',
+        tags: 'Local Used, Foreign Used, To Import, Locally Available, 3000CC, Manual, Automatic'
+
+    },
+    {
+        id: 4,
+        image: `https://loremflickr.com/300/200/${encodeURIComponent('berry')}`,
+        title: 'Mojito',
+        description: 'Classic Cuban cocktail with mint and lime.',
+        price: 7.99,
+        link: 'https://lqrs.com',
+        tags: 'Local Used, Foreign Used, To Import, Locally Available, 3000CC, Manual, Automatic'
+
+    },
+    {
+        id: 5,
+        image: `https://loremflickr.com/300/200/${encodeURIComponent('orange')}`,
+        title: 'Matcha Latte',
+        description: 'Creamy green tea latte, rich in antioxidants.',
+        price: 6.49,
+        link: 'https://lqrs.com',
+        tags: 'Local Used, Foreign Used, To Import, Locally Available, 3000CC, Manual, Automatic'
+
+    },
+    {
+        id: 6,
+        image: `https://loremflickr.com/300/200/${encodeURIComponent('peach')}`,
+        title: 'Fruit Punch',
+        description: 'Sweet and tangy punch, bursting with fruity flavors.',
+        price: 3.99,
+        link: 'https://lqrs.com',
+        tags: 'Local Used, Foreign Used, To Import, Locally Available, 3000CC, Manual, Automatic'
+
+    },
+    {
+        id: 7,
+        image: `https://loremflickr.com/300/200/${encodeURIComponent('cherry')}`,
+        title: 'Bubble Tea',
+        description: 'Chewy tapioca pearls in a sweet milk tea base.',
+        price: 4.99,
+        link: 'https://lqrs.com',
+        tags: 'Local Used, Foreign Used, To Import, Locally Available, 3000CC, Manual, Automatic'
+    },
+]
+
+const services = [
+    {
+        title: 'Japan Auction Access',
+        description: 'We’re connected to 200+ Japanese auctions and have access to most Japanese dealers stock, giving you a wide selection of high- quality vehicles at competitive prices.',
+        color: '#7c3aed', // Violet
+        icon: <Gavel className="w-6 h-6" />,
+    },
+    {
+        title: 'Free Consultation',
+        description: 'Get expert advice on budgeting, deposits, financing, and vehicle clearance—at no cost.',
+        color: '#2C3E50', // Midnight Blue
+        icon: <UserCheck className="w-6 h-6" />,
+    },
+    {
+        title: 'Dual Market Stock',
+        description: 'Skip the middlemen and choose from a wide selection of vehicles already in Kenya or directly from Japan—reliable, fast, and transparent.',
+        color: '#2563eb', // Blue
+        icon: <Globe className="w-6 h-6" />,
+    },
+    {
+        title: 'Partial Payments',
+        description: 'Make payments in stages to ease your financial burden pay 50% on booking and the remaining 50% upon arrival or delivery of your vehicle.',
+        color: '#059669', // Emerald
+        icon: <Wallet className="w-6 h-6" />,
+    },
+    {
+        title: 'Doorstep Delivery',
+        description: 'From buying in Japan to shipping, customs clearance, and doorstep delivery—we handle it all for a smooth, stress- free experience.',
+        color: '#f59e0b', // Amber
+        icon: <Truck className="w-6 h-6" />,
+    },
+    {
+        title: 'Flexible Financing',
+        description: 'With as little as a 50% deposit, enjoy extended payment periods of up to 2 year.',
+        color: '#dc2626', // Red
+        icon: <CalendarClock className="w-6 h-6" />,
+    },
+    {
+        title: 'Payment Options',
+        description: 'You can make payment to our local office in Kenya, and we’ll handle the transfer to Japan on your behalf. Prefer to manage it yourself? Send payment directly to Japan and take care of customs personally—with full transparency every step of the way.',
+        color: '#34495E', // Slate Gray
+        icon: <Banknote className="w-6 h-6" />,
+    },
+]
+//     {
+//         id: 1,
+//         title: "20% off every Product",
+//         subtitle: "Black Friday Sale",
+//         ctaText: "Buy now",
+//         icon: null,
+//         image: "/images/deal1.png",
+//         link: "#"
+//     },
+//     {
+//         id: 2,
+//         title: "Free Delivery on All Orders",
+//         subtitle: "Holiday Special",
+//         ctaText: "Shop now",
+//         image: "/images/deal2.png",
+//         icon: null,
+//         link: "#"
+//     },
+//     {
+//         id: 3,
+//         title: "Exclusive Deals on SUVs",
+//         subtitle: "Car Import Offer",
+//         ctaText: "Explore",
+//         image: "/images/deal3.png",
+//         icon: null,
+//         link: "#"
+//     }
+// ];
+
+export default function LandingMotorsPage() {
     return (
         <div>
-            <Hero variant="motors" />
+            <TopNavbar />
 
-            <div>
-                {/* <!-- ABOUT Section --> */}
-                <div className="w-full lg:h-screen h-full m-auto flex items-center justify-cetner py-20">
-                    <div className="w-full h-full flex flex-col justify-center items-center sm:px-4 px-2">
-                        {/* <!--  --> */}
-                        <div className="lg:w-[90%] w-full mx-auto flex flex-col lg:gap-6 lg:flex-row items-center justify-center ">
-                            <div className="relative">
-                                {/* <!-- Side Img 1 --> */}
-                                <img className="absolute z-20 lg:left-[2rem] -top-4 left-[1rem] lg:w-[8rem] lg:h-[8rem] sm:w-[6rem] sm:h-[6rem] w-[3rem] h-[3rem] rounded-full" src="https://images.unsplash.com/photo-1496483648148-47c686dc86a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw3fHxmbG93ZXJ8ZW58MHwwfHx8MTcyMDk0OTQ2MHww&ixlib=rb-4.0.3&q=80&w=1080" alt="Side Image" />
+            <Banner slides={slides} />
 
-                                {/* <!-- Side Img 2 --> */}
-                                <img className="absolute z-20 lg:top-[12rem] sm:top-[11rem] top-[5rem] sm:-left-[3rem] -left-[2rem] lg:w-[8rem] lg:h-[8rem] sm:w-[6rem] sm:h-[6rem] w-[3rem] h-[3rem] rounded-full" src="https://images.unsplash.com/photo-1558281033-19cead6981dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwxMHx8Zmxvd2VyfGVufDB8MHx8fDE3MjA5NDk0NjB8MA&ixlib=rb-4.0.3&q=80&w=1080" alt="Side Image 2" />
+            <Services services={services} />
 
-                                {/* <!-- Side Img 3 --> */}
-                                <img className="absolute z-20 lg:top-[23rem] sm:top-[20.5rem] top-[10.5rem] left-[2rem] lg:w-[8rem] lg:h-[8rem] sm:w-[6rem] sm:h-[6rem] w-[3rem] h-[3rem] rounded-full" src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwxfHxmbG93ZXJ8ZW58MHwwfHx8MTcyMDk0OTQ2MHww&ixlib=rb-4.0.3&q=80&w=1080" alt="Side Image 3" />
+            <NewArrivals products={products} />
+            
+            <Deals />
 
-                                {/* <!-- Main Img --> */}
-                                <img
-                                    className="rounded-full relative object-cover right-0 lg:w-[30rem] lg:h-[30rem] sm:w-[25rem] sm:h-[25rem] w-[12rem] h-[12rem] outline sm:outline-offset-[.77em] outline-offset-[.37em] outline-green-500"
-                                    src="https://images.unsplash.com/photo-1507290439931-a861b5a38200?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwxM3x8Zmxvd2VyfGVufDB8MHx8fDE3MjA5NDk0NjB8MA&ixlib=rb-4.0.3&q=80&w=1080" alt="About us" />
-                            </div>
-                            {/* <!--  --> */}
-                            <div
-                                className="lg:w-[60%] bg-gray-800 p-4 w-full h-fit shadow-xl shadow-green-300/40 flex flex-col justify-center items-center sm:px-6 px-4 rounded-xl">
-                                <h2 className="text-4xl text-center text-green-600 font-bold px-4 py-1 md:mt-0 mt-10">
-                                    About Us
-                                </h2>
-                                <p className="md:text-3xl text-2xl text-center font-bold my-5">We are
-                                    Mikki Trade Motors
-                                </p>
-                                <p className="md:text-xl sm:text-lg text-base mt-2 text-justify sm:px-2">At Petal Haven,
-                                    we believe in the transformative power of flowers. Our blooms are not just arrangements; they are
-                                    expressions of beauty, joy, and emotion. From elegant bouquets to enchanting floral designs, we
-                                    curate every creation with precision and care. Whether it's a celebration, a gesture of love, or a
-                                    moment of solace, Petal Haven's exquisite flowers speak a language of their own, bringing nature's
-                                    beauty to your doorstep. Experience the enchantment of Petal Haven and let flowers tell your story.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <ForYou />
 
-                <div className="text-gray-800 p-6">
-                    <div className="max-w-7xl mx-auto">
-                        {/* <!-- Title --> */}
-                        <div className="text-center mb-10">
-                            <h1 className="text-3xl font-bold">Meet Our Team</h1>
-                            <p className="text-gray-800">Our dedicated team of professionals is here to help you succeed.</p>
-                        </div>
-
-                        {/* <!-- Team Members Grid --> */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {/* <!-- Team Member Card --> */}
-                            <div className="bg-gray-800 shadow-lg rounded-lg overflow-hidden">
-                                <img src="https://res.cloudinary.com/djv4xa6wu/image/upload/v1735722161/AbhirajK/Abhirajk2.webp" alt="Team Member 1" className="w-full h-48 object-cover" />
-                                    <div className="p-6">
-                                        <h2 className="text-xl font-semibold">John Doe</h2>
-                                        <p className="text-white">Full-Stack Developer</p>
-                                        <div className="flex items-center mt-4 space-x-3">
-                                            <a href="#" className="text-blue-500 hover:text-blue-300">[Facebook]</a>
-                                            <a href="#" className="text-blue-400 hover:text-blue-300">[Twitter]</a>
-                                            <a href="#" className="text-gray-600 hover:text-gray-300">[Email]</a>
-                                        </div>
-                                    </div>
-                            </div>
-
-                            {/* <!-- Duplicate the above block for other team members --> */}
-                            <div className="bg-gray-800 shadow-lg rounded-lg overflow-hidden">
-                                <img src="https://res.cloudinary.com/djv4xa6wu/image/upload/v1735722161/AbhirajK/Abhirajk3.webp" alt="Team Member 2" className="w-full h-48 object-cover" />
-                                    <div className="p-6">
-                                        <h2 className="text-xl font-semibold">Jane Smith</h2>
-                                        <p className="text-white">UI/UX Designer</p>
-                                        <div className="flex items-center mt-4 space-x-3">
-                                            <a href="#" className="text-blue-500 hover:text-blue-300">[Facebook]</a>
-                                            <a href="#" className="text-blue-400 hover:text-blue-300">[Twitter]</a>
-                                            <a href="#" className="text-gray-600 hover:text-gray-300">[Email]</a>
-                                        </div>
-                                    </div>
-                            </div>
-
-                            <div className="bg-gray-800 shadow-lg rounded-lg overflow-hidden">
-                                <img src="https://res.cloudinary.com/djv4xa6wu/image/upload/v1735722163/AbhirajK/Abhirajk%20mykare.webp" alt="Team Member 3" className="w-full h-48 object-cover" />
-                                    <div className="p-6">
-                                        <h2 className="text-xl font-semibold">Alex Johnson</h2>
-                                        <p className="text-white">Project Manager</p>
-                                        <div className="flex items-center mt-4 space-x-3">
-                                            <a href="#" className="text-blue-500 hover:text-blue-300">[Facebook]</a>
-                                            <a href="#" className="text-blue-400 hover:text-blue-300">[Twitter]</a>
-                                            <a href="#" className="text-gray-600 hover:text-gray-300">[Email]</a>
-                                        </div>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <Gallery />
-
-            <ContactUs />
         </div>
     );
 }

@@ -131,8 +131,7 @@ const Gallery: React.FC = () => {
 
     return (
         <div className="text-center p-10">
-            <h1 className="font-bold text-4xl mb-4">Product Gallery</h1>
-            <h2 className="text-3xl mb-8">Tailwind CSS</h2>
+            <h1 className="font-bold text-black text-4xl mb-4">Our Products</h1>
 
             {/* Brand Filter Panel */}
             <div className="flex items-center justify-center mb-10">

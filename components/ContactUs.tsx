@@ -13,7 +13,7 @@ export default function ContactUs() {
                         d="M21.4286 0C15.5134 0 10.7143 4.74792 10.7143 10.6C10.7143 16.4521 15.5134 21.2 21.4286 21.2C27.3437 21.2 32.1429 16.4521 32.1429 10.6C32.1429 4.74792 27.3437 0 21.4286 0ZM16.0714 24.7333C7.17076 24.7333 0 31.8276 0 40.6333V42.4C0 46.3198 3.1808 49.4667 7.14286 49.4667H28.5714V45.9333H17.8571V31.8H28.5714V24.8299C27.9855 24.7609 27.3856 24.7333 26.7857 24.7333H16.0714ZM32.1429 24.7333V35.3333H21.4286V42.4H32.1429V53H39.2857V42.4H50V35.3333H39.2857V24.7333H32.1429Z"
                         fill="#38B7FF"></path>
                 </svg>
-                <h2 className="text-white text-2xl sm:text-[48px]">CONTACT US</h2>
+                <h2 className="text-black text-3xl sm:text-[48px]">CONTACT US</h2>
             </div>
             <div className="z-20 relative px-5 mt-20 md:mt-24 flex flex-wrap gap-7 justify-center lg:max-w-[800px] mx-auto ">
                 <div
@@ -38,28 +38,7 @@ export default function ContactUs() {
                     </svg>
                     <h3 className="text-base capitalize  font-black text-white sm:text-[28px]">whatsapp</h3>
                     <p className="text-sm text-center font-regular text-[#A4A4A5] sm:text-xl  "><a target="_blank" rel="noopener noreferrer"
-                        href="https://wa.me/123456789">+123456789</a></p>
-                </div>
-                <div
-                    className="w-[100px] hover:scale-[1.1] h-[125px] sm:w-[200px] sm:h-[225px] gap-1 md:gap-4 flex flex-col  px-2 py-3 justify-center items-center bg-white  bg-opacity-30 rounded-[25px]">
-                    <svg aria-hidden="true" className="icon w-[64px] sm:w-[100px] h-[64px] sm:h-[100px]" fill="none"
-                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" id="telegram">
-                        <path
-                            d="M50.0002 8.33325C38.9495 8.33325 28.3514 12.7231 20.5374 20.5371C12.7234 28.3512 8.3335 38.9492 8.3335 49.9999C8.3335 61.0506 12.7234 71.6487 20.5374 79.4627C28.3514 87.2767 38.9495 91.6666 50.0002 91.6666C61.0508 91.6666 71.6489 87.2767 79.4629 79.4627C87.277 71.6487 91.6668 61.0506 91.6668 49.9999C91.6668 38.9492 87.277 28.3512 79.4629 20.5371C71.6489 12.7231 61.0508 8.33325 50.0002 8.33325Z"
-                            fill="#38B7FF"></path>
-                        <path
-                            d="M70.7293 31.2501L62.9252 71.0959C62.9252 71.0959 62.5897 72.9168 60.3314 72.9168C59.1314 72.9168 58.5127 72.3459 58.5127 72.3459L41.6085 58.3188L33.3377 54.1501L22.7231 51.3272C22.7231 51.3272 20.8335 50.7813 20.8335 49.2188C20.8335 47.9168 22.7772 47.2959 22.7772 47.2959L67.1856 29.6543C67.1856 29.6543 68.5418 29.1647 69.5314 29.1668C70.1397 29.1668 70.8335 29.4272 70.8335 30.2084C70.8335 30.7293 70.7293 31.2501 70.7293 31.2501Z"
-                            fill="white"></path>
-                        <path
-                            d="M47.9169 63.5522L40.7794 70.5814C40.7794 70.5814 40.469 70.8209 40.0544 70.8314C39.9106 70.8355 39.7565 70.8126 39.5981 70.7418L41.6065 58.3147L47.9169 63.5522Z"
-                            fill="#B0BEC5"></path>
-                        <path
-                            d="M62.2856 37.9084C61.9335 37.45 61.2835 37.3667 60.8252 37.7146L33.3335 54.1667C33.3335 54.1667 37.721 66.4417 38.3897 68.5667C39.0606 70.6938 39.5981 70.7438 39.5981 70.7438L41.6064 58.3167L62.0897 39.3667C62.5481 39.0188 62.6335 38.3667 62.2856 37.9084Z"
-                            fill="#CFD8DC"></path>
-                    </svg>
-                    <h3 className="text-base capitalize  font-black text-white sm:text-[28px]">telegram</h3>
-                    <p className="text-sm text-center font-regular text-[#A4A4A5] sm:text-xl  ">
-                        <a target="_blank" href="https://t.me/username" rel="noopener noreferrer">UserName</a></p>
+                        href="https://wa.me/+254708149430">+254708149430</a></p>
                 </div>
                 <div
                     className="w-[100px] hover:scale-[1.1] h-[125px] sm:w-[200px] sm:h-[225px] gap-1 md:gap-4 flex flex-col  px-2 py-3 justify-center items-center bg-white  bg-opacity-30 rounded-[25px]">
@@ -75,27 +54,6 @@ export default function ContactUs() {
                     <h3 className="text-base capitalize  font-black text-white sm:text-[28px]">location</h3>
                     <p className="text-sm text-center font-regular text-[#A4A4A5] sm:text-xl  "><a target="_blank" href="location">Syria
                         Aleppo</a></p>
-                </div>
-                <div
-                    className="w-[100px] hover:scale-[1.1] h-[125px] sm:w-[200px] sm:h-[225px] gap-1 md:gap-4 flex flex-col  px-2 py-3 justify-center items-center bg-white  bg-opacity-30 rounded-[25px]">
-                    <svg aria-hidden="true" className="icon w-[64px] sm:w-[100px] h-[64px] sm:h-[100px]" fill="none"
-                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" id="linkedin">
-                        <path
-                            d="M87.5 77.0833C87.5 82.8375 82.8375 87.5 77.0833 87.5H22.9167C17.1646 87.5 12.5 82.8375 12.5 77.0833V22.9167C12.5 17.1625 17.1646 12.5 22.9167 12.5H77.0833C82.8375 12.5 87.5 17.1625 87.5 22.9167V77.0833Z"
-                            fill="#38B7FF"></path>
-                        <path opacity="0.05"
-                            d="M62.4998 77.0834V56.0438C62.4998 52.5251 60.7936 50.423 57.9332 50.423C56.2353 50.423 54.9873 51.3792 54.2269 53.2647C54.1915 53.398 54.1415 53.9417 54.1623 55.5855L54.1665 77.0834H39.5832V37.5001H54.1665V39.7105C56.2957 38.2417 58.9061 37.5001 61.954 37.5001C71.4269 37.5001 77.0811 43.9438 77.0811 54.7376L77.0832 77.0834H62.4998ZM22.9165 77.0834V37.5001H30.1186C25.9457 37.5001 22.9165 34.4334 22.9165 30.2063C22.9165 25.9834 25.9957 22.9167 30.2373 22.9167C34.429 22.9167 37.4144 25.898 37.4998 30.1647C37.4998 34.423 34.4186 37.5001 30.1769 37.5001H37.4998V77.0834H22.9165Z"
-                            fill="black"></path>
-                        <path opacity="0.07"
-                            d="M63.5418 76.0416V56.0437C63.5418 51.9332 61.3939 49.3812 57.9335 49.3812C55.2356 49.3812 53.9022 51.2812 53.2606 52.8749C53.0897 53.2895 53.1127 54.9353 53.121 55.6374L53.1252 76.0416H40.6252V38.5416H53.1252V41.9541C54.7814 40.2395 57.4481 38.5416 61.9543 38.5416C70.7731 38.5416 76.0397 44.5958 76.0397 54.7374L76.0418 76.0416H63.5418ZM23.9585 76.0416V38.5416H36.4585V76.0416H23.9585ZM30.1189 36.4583C26.5502 36.4583 23.9585 33.8291 23.9585 30.2062C23.9585 26.5853 26.6002 23.9583 30.2377 23.9583C33.8293 23.9583 36.3856 26.5187 36.4585 30.1853C36.4585 33.8291 33.8168 36.4583 30.1772 36.4583H30.1189Z"
-                            fill="black"></path>
-                        <path
-                            d="M25 39.5833H35.4167V75H25V39.5833ZM30.1771 35.4167H30.1187C27.0104 35.4167 25 33.1 25 30.2062C25 27.25 27.0729 25 30.2375 25C33.4062 25 35.3583 27.25 35.4167 30.2062C35.4167 33.0979 33.4062 35.4167 30.1771 35.4167ZM75 75H64.5833V56.0437C64.5833 51.4646 62.0312 48.3396 57.9333 48.3396C54.8062 48.3396 53.1146 50.4479 52.2937 52.4854C51.9937 53.2146 52.0833 55.2312 52.0833 56.25V75H41.6667V39.5833H52.0833V45.0333C53.5854 42.7083 55.9375 39.5833 61.9542 39.5833C69.4083 39.5833 74.9979 44.2708 74.9979 54.7375L75 75Z"
-                            fill="white"></path>
-                    </svg>
-                    <h3 className="text-base capitalize  font-black text-white sm:text-[28px]">linkedin</h3>
-                    <p className="text-sm text-center font-regular text-[#A4A4A5] sm:text-xl  "><a target="_blank" rel="noopener noreferrer"
-                        href="https://www.linkedin.com/in/abdulbasit-abdulgani">Abdulbasit</a></p>
                 </div>
                 <div
                     className="w-[100px] hover:scale-[1.1] h-[125px] sm:w-[200px] sm:h-[225px] gap-1 md:gap-4 flex flex-col  px-2 py-3 justify-center items-center bg-white  bg-opacity-30 rounded-[25px]">

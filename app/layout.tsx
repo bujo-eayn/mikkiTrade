@@ -31,7 +31,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar />
+        <Analytics />
+        <SpeedInsights/>
+        {/* <Navbar /> */}
         {children}
         <Footer />
       </body>

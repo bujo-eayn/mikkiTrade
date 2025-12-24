@@ -2,11 +2,15 @@ import Image from "next/image";
 import CompanySection from "@/components/CompanySection";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
+import Carousel from "@/components/Carousel";
+import LandingNavbar from "@/components/LandingNavbar";
 
 export default function Home() {
   return (
     <main>
-      <Hero variant="international" />
+      <LandingNavbar />
+      {/* <Hero variant="international" /> */}
+      <Carousel />
 
       <About
         title={

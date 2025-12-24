@@ -1,0 +1,63 @@
+/* Sticky Navbar */
+.navbar {
+    position: relative;
+    top: 0;
+    width: 100%;
+    z-index: 50;
+    transition: all 0.3s ease;
+}
+
+.sticky {
+    position: sticky;
+    top: 0;
+    backdrop-filter: blur(10px);
+    background: rgba(2, 6, 23, 0.85);
+    /* blue-950 with opacity */
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Floating animation */
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes pulseGlow {
+
+    0%,
+    100% {
+        opacity: 0.6;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    0% {
+        transform: translateY(-10%);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.transparent {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    background: transparent;
+    z-index: 50;
+    transition: all 0.3s ease;
+}
