@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight, Phone } from 'lucide-react';
+import { formatCurrency } from '@/lib/utils/formatNumber';
 
 interface FeaturedVehicle {
   id: string;
@@ -68,14 +69,6 @@ export default function HeroCarousel({
     setIsAutoPlaying(true);
   };
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-KE', {
-      style: 'currency',
-      currency: 'KES',
-      minimumFractionDigits: 0,
-    }).format(price);
-  };
-
   const whatsappNumber = '254708149430';
 
   if (vehicles.length === 0) {
@@ -84,7 +77,7 @@ export default function HeroCarousel({
 
   const currentVehicle = vehicles[currentIndex];
   const whatsappMessage = encodeURIComponent(
-    `Hi, I'm interested in the ${currentVehicle.year} ${currentVehicle.make} ${currentVehicle.model} (${formatPrice(currentVehicle.price)})`
+    `Hi, I'm interested in the ${currentVehicle.year} ${currentVehicle.make} ${currentVehicle.model} (${formatCurrency(currentVehicle.price)})`
   );
 
   return (
@@ -150,15 +143,15 @@ export default function HeroCarousel({
                   <div className="mb-8">
                     {vehicle.oldPrice && (
                       <div className="text-xl text-gray-400 line-through mb-2">
-                        {formatPrice(vehicle.oldPrice)}
+                        {formatCurrency(vehicle.oldPrice)}
                       </div>
                     )}
                     <div className="text-4xl md:text-5xl font-bold text-white">
-                      {formatPrice(vehicle.price)}
+                      {formatCurrency(vehicle.price)}
                     </div>
                     {vehicle.oldPrice && (
                       <div className="text-sm text-green-400 font-semibold mt-2">
-                        Save {formatPrice(vehicle.oldPrice - vehicle.price)}!
+                        Save {formatCurrency(vehicle.oldPrice - vehicle.price)}!
                       </div>
                     )}
                   </div>

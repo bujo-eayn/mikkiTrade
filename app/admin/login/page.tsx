@@ -1,26 +1,142 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { Lock, Mail, Eye, EyeOff } from 'lucide-react';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { Lock, Mail, Eye, EyeOff, AlertCircle, CheckCircle } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 
-export default function AdminLoginPage() {
-  const router = useRouter();
+function LoginForm() {
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  // Check for success messages from URL
+  useEffect(() => {
+    if (searchParams.get('reset') === 'success') {
+      setSuccessMessage('Your password has been reset successfully. You can now log in with your new password.');
+    } else if (searchParams.get('verified') === 'true') {
+      setSuccessMessage('Your email has been verified successfully. You can now log in.');
+    } else if (searchParams.get('timeout') === 'true') {
+      setError('Your session has expired due to inactivity. Please log in again.');
+    }
+  }, [searchParams]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(null);
 
-    // Simulate login delay
-    setTimeout(() => {
-      // For demo: any email/password works
-      router.push('/admin/dashboard');
-    }, 1500);
+    try {
+      // Validate inputs
+      if (!email || !password) {
+        throw new Error('Please enter both email and password');
+      }
+
+      if (!email.includes('@')) {
+        throw new Error('Please enter a valid email address');
+      }
+
+      if (password.length < 12) {
+        throw new Error('Password must be at least 12 characters');
+      }
+
+      console.log('Attempting login for:', email);
+
+      // Call server-side login API
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      console.log('Login response:', { status: response.status, success: data.success });
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Login failed');
+      }
+
+      if (!data.session) {
+        throw new Error('No session returned from login');
+      }
+
+      // Set the session in the client
+      const { error: sessionError } = await supabase.auth.setSession({
+        access_token: data.session.access_token,
+        refresh_token: data.session.refresh_token,
+      });
+
+      if (sessionError) {
+        console.error('Session error:', sessionError);
+        throw new Error('Failed to establish session');
+      }
+
+      console.log('Session established, verifying session cookies');
+
+      // Wait for cookies to be written (Next.js/browser cookie sync)
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      // Verify session was properly set
+      const { data: { session: verifiedSession } } = await supabase.auth.getSession();
+
+      console.log('Session verification result:', verifiedSession ? 'Valid' : 'Failed');
+
+      if (!verifiedSession) {
+        console.error('Session verification failed - cookies not set');
+        console.log('Attempting manual cookie check...');
+
+        // Check if cookies exist
+        const cookies = document.cookie;
+        console.log('Browser cookies:', cookies.includes('sb-') ? 'Supabase cookies found' : 'No Supabase cookies');
+
+        throw new Error('Session could not be established. Please try again.');
+      }
+
+      console.log('Session verified, performing redirect');
+
+      // Production-ready redirect: Use replace() to prevent back button issues
+      window.location.replace('/admin/dashboard');
+
+    } catch (err: unknown) {
+      console.error('Login error:', err);
+
+      let errorMessage = 'An unexpected error occurred';
+
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      } else if (typeof err === 'object' && err !== null) {
+        const errorObj = err as { message?: string; error?: string };
+        errorMessage = errorObj.message || errorObj.error || JSON.stringify(err);
+      } else if (typeof err === 'string') {
+        errorMessage = err;
+      }
+
+      // Handle specific error messages with user-friendly text
+      if (errorMessage.includes('Too many login attempts')) {
+        setError('Too many failed login attempts. Please try again in 15 minutes.');
+      } else if (errorMessage.includes('Invalid email or password')) {
+        setError('Invalid email or password. Please check your credentials and try again.');
+      } else if (errorMessage.includes('Email not confirmed')) {
+        setError('Please verify your email address before logging in. Check your inbox for the confirmation email.');
+      } else if (errorMessage.includes('deactivated')) {
+        setError('Your account has been deactivated. Please contact support for assistance.');
+      } else if (errorMessage.includes('not authorized') || errorMessage.includes('permission')) {
+        setError('You do not have permission to access this admin portal.');
+      } else {
+        setError(errorMessage);
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -36,7 +152,7 @@ export default function AdminLoginPage() {
         <div className="text-center mb-8">
           <div className="inline-block bg-white p-4 rounded-2xl shadow-2xl mb-4">
             <Image
-              src="/logo-motors.png"
+              src="/images/logo-motors.png"
               alt="Mikki Trade Motors"
               width={120}
               height={120}
@@ -50,6 +166,22 @@ export default function AdminLoginPage() {
         {/* Login Form */}
         <div className="bg-white rounded-2xl shadow-2xl p-8">
           <form onSubmit={handleLogin} className="space-y-6">
+            {/* Success Message */}
+            {successMessage && (
+              <div className="flex items-center gap-2 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
+                <p className="text-sm text-green-800">{successMessage}</p>
+              </div>
+            )}
+
+            {/* Error Message */}
+            {error && (
+              <div className="flex items-center gap-2 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0" />
+                <p className="text-sm text-red-800">{error}</p>
+              </div>
+            )}
+
             {/* Email Input */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
@@ -115,9 +247,9 @@ export default function AdminLoginPage() {
                   Remember me
                 </label>
               </div>
-              <a href="#" className="text-sm text-[#a235c3] hover:text-[#8b2da3] font-medium">
+              <Link href="/admin/forgot-password" className="text-sm text-[#a235c3] hover:text-[#8b2da3] font-medium">
                 Forgot password?
-              </a>
+              </Link>
             </div>
 
             {/* Login Button */}
@@ -140,11 +272,11 @@ export default function AdminLoginPage() {
             </button>
           </form>
 
-          {/* Demo Credentials */}
+          {/* Info Message */}
           <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-blue-800 font-semibold mb-2">🎬 Demo Credentials:</p>
+            <p className="text-sm text-blue-800 font-semibold mb-2">ℹ️ Authentication Required</p>
             <p className="text-xs text-blue-600">
-              Use any email and password to access the demo admin panel
+              Please sign in with your authorized admin credentials to access the portal
             </p>
           </div>
 
@@ -170,14 +302,26 @@ export default function AdminLoginPage() {
 
         {/* Back to Site */}
         <div className="text-center mt-6">
-          <a
+          <Link
             href="/"
             className="text-white hover:text-cyan-200 text-sm transition-colors"
           >
             ← Back to Mikki Trade
-          </a>
+          </Link>
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AdminLoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-[#2b404f] via-[#3d5a6f] to-[#a235c3] flex items-center justify-center">
+        <div className="text-white">Loading...</div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   );
 }

@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect } from 'react';
 import { FaPhoneAlt, FaEnvelope, FaWhatsapp } from 'react-icons/fa';
-import { CONTACT_DETAILS} from "../constants.js"; // Adjust the import path as necessary
+import { CONTACT_DETAILS} from "../constants"; // Adjust the import path as necessary
 
 interface ContactUsModalProps {
     onClose: () => void;

@@ -1,4 +1,7 @@
+'use client';
+
 import { Shield, Award, Users, Wrench, DollarSign, Clock } from 'lucide-react';
+import { formatNumber } from '@/lib/utils/formatNumber';
 
 export default function WhyUs() {
   const reasons = [
@@ -73,11 +76,11 @@ export default function WhyUs() {
         <div className="mt-20 bg-gradient-to-r from-[#a235c3] via-[#7d2ca0] to-[#2b404f] rounded-3xl shadow-2xl p-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-10 text-center text-white">
             <div className="transform hover:scale-110 transition-transform">
-              <p className="text-5xl font-bold mb-3">2000+</p>
+              <p className="text-5xl font-bold mb-3">{formatNumber(2000)}+</p>
               <p className="text-base opacity-95 font-medium">Happy Customers</p>
             </div>
             <div className="transform hover:scale-110 transition-transform">
-              <p className="text-5xl font-bold mb-3">500+</p>
+              <p className="text-5xl font-bold mb-3">{formatNumber(500)}+</p>
               <p className="text-base opacity-95 font-medium">Vehicles Sold</p>
             </div>
             <div className="transform hover:scale-110 transition-transform">

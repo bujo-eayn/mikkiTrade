@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import Navbar from '@/components/motors/Navbar';
 import QuickFilters from '@/components/motors/QuickFilters';
 import FilterPanel, { VehicleFilters } from '@/components/motors/FilterPanel';
 import HeroCarousel from '@/components/motors/HeroCarousel';
 import VehicleCard from '@/components/motors/VehicleCard';
 import WhyUs from '@/components/motors/WhyUs';
-import { mockVehicles, getFeaturedVehicles, Vehicle } from '@/lib/mockVehicles';
+import { useVehicles, useFeaturedVehicles } from '@/lib/hooks/useVehicles';
 
 interface QuickFilter {
   id: string;
@@ -23,159 +23,146 @@ export default function MikkiTradeMotorsPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [activeQuickFilters, setActiveQuickFilters] = useState<QuickFilter[]>([]);
   const [detailedFilters, setDetailedFilters] = useState<VehicleFilters | null>(null);
-  const [filteredVehicles, setFilteredVehicles] = useState<Vehicle[]>(mockVehicles);
   const [savedVehicles, setSavedVehicles] = useState<Set<string>>(new Set());
 
-  // Featured vehicles for hero carousel
-  const featuredVehicles = getFeaturedVehicles().map(v => ({
+  // Fetch featured vehicles for hero carousel
+  const { vehicles: featuredData, loading: featuredLoading } = useFeaturedVehicles(5);
+
+  // Map sortBy values to API parameters
+  const getSortingParams = (sortValue: string) => {
+    switch (sortValue) {
+      case 'newest':
+        return { sortBy: 'created_at', sortOrder: 'desc' as const };
+      case 'price-low':
+        return { sortBy: 'price', sortOrder: 'asc' as const };
+      case 'price-high':
+        return { sortBy: 'price', sortOrder: 'desc' as const };
+      case 'year-new':
+        return { sortBy: 'year', sortOrder: 'desc' as const };
+      case 'year-old':
+        return { sortBy: 'year', sortOrder: 'asc' as const };
+      case 'mileage':
+        return { sortBy: 'mileage', sortOrder: 'asc' as const };
+      default:
+        return { sortBy: 'created_at', sortOrder: 'desc' as const };
+    }
+  };
+
+  // Build API filters from UI state
+  const apiFilters = useMemo(() => {
+    const filters: any = {};
+
+    // Search query
+    if (searchQuery) {
+      filters.search = searchQuery;
+    }
+
+    // Quick filters
+    activeQuickFilters.forEach(filter => {
+      switch (filter.category) {
+        case 'price':
+          if (filter.value.startsWith('<')) {
+            filters.maxPrice = parseInt(filter.value.substring(1));
+          } else if (filter.value.startsWith('>')) {
+            filters.minPrice = parseInt(filter.value.substring(1));
+          } else if (filter.value.includes('-')) {
+            const [min, max] = filter.value.split('-').map(n => parseInt(n));
+            filters.minPrice = min;
+            filters.maxPrice = max;
+          }
+          break;
+        case 'year':
+          filters.minYear = parseInt(filter.value);
+          filters.maxYear = parseInt(filter.value);
+          break;
+        case 'brand':
+          filters.make = filter.value;
+          break;
+        case 'bodyType':
+          filters.bodyType = filter.value;
+          break;
+        case 'transmission':
+          filters.transmission = filter.value;
+          break;
+        case 'fuelType':
+          filters.fuelType = filter.value;
+          break;
+      }
+    });
+
+    // Detailed filters
+    if (detailedFilters) {
+      if (detailedFilters.priceRange.min > 0) filters.minPrice = detailedFilters.priceRange.min;
+      if (detailedFilters.priceRange.max < 20000000) filters.maxPrice = detailedFilters.priceRange.max;
+      if (detailedFilters.yearRange.min > 2000) filters.minYear = detailedFilters.yearRange.min;
+      if (detailedFilters.yearRange.max < 2025) filters.maxYear = detailedFilters.yearRange.max;
+      if (detailedFilters.mileageRange.min > 0) filters.minMileage = detailedFilters.mileageRange.min;
+      if (detailedFilters.mileageRange.max < 200000) filters.maxMileage = detailedFilters.mileageRange.max;
+      if (detailedFilters.brands.length > 0) filters.make = detailedFilters.brands[0];
+      if (detailedFilters.bodyTypes.length > 0) filters.bodyType = detailedFilters.bodyTypes[0];
+      if (detailedFilters.transmissions.length > 0) filters.transmission = detailedFilters.transmissions[0];
+      if (detailedFilters.fuelTypes.length > 0) filters.fuelType = detailedFilters.fuelTypes[0];
+      if (detailedFilters.colors.length > 0) filters.color = detailedFilters.colors[0];
+    }
+
+    return filters;
+  }, [searchQuery, activeQuickFilters, detailedFilters]);
+
+  // Fetch vehicles from database with filters and sorting
+  const sorting = getSortingParams(sortBy);
+  const { vehicles, loading, error, pagination } = useVehicles({
+    filters: apiFilters,
+    sorting,
+    pagination: { page: 1, limit: 50 },
+  });
+
+  // Map featured vehicles for carousel
+  const featuredVehicles = featuredData.map(v => ({
     id: v.id,
     make: v.make,
     model: v.model,
     year: v.year,
     price: v.price,
-    oldPrice: v.oldPrice,
-    image: v.images[0],
-    tagline: v.tagline,
-    badge: v.badges?.[0],
+    oldPrice: v.on_deal && v.deal_description ? undefined : undefined,
+    image: v.vehicle_images && v.vehicle_images.length > 0
+      ? (v.vehicle_images.find(img => img.is_primary)?.url || v.vehicle_images[0]?.url)
+      : 'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=1200&h=600&fit=crop',
+    tagline: v.description?.substring(0, 50) || `${v.year} ${v.make} ${v.model}`,
+    badge: v.tags?.[0] as 'NEW' | 'HOT DEAL' | 'LIMITED' | undefined,
   }));
 
-  // Filter and sort vehicles
-  useEffect(() => {
-    let filtered = [...mockVehicles];
-
-    // Apply search query
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        v =>
-          v.make.toLowerCase().includes(query) ||
-          v.model.toLowerCase().includes(query) ||
-          `${v.year}`.includes(query)
-      );
-    }
-
-    // Apply quick filters
-    activeQuickFilters.forEach(filter => {
-      switch (filter.category) {
-        case 'price':
-          if (filter.value.startsWith('<')) {
-            const max = parseInt(filter.value.substring(1));
-            filtered = filtered.filter(v => v.price < max);
-          } else if (filter.value.startsWith('>')) {
-            const min = parseInt(filter.value.substring(1));
-            filtered = filtered.filter(v => v.price > min);
-          } else if (filter.value.includes('-')) {
-            const [min, max] = filter.value.split('-').map(n => parseInt(n));
-            filtered = filtered.filter(v => v.price >= min && v.price <= max);
-          }
-          break;
-        case 'year':
-          filtered = filtered.filter(v => v.year === parseInt(filter.value));
-          break;
-        case 'brand':
-          filtered = filtered.filter(v => v.make === filter.value);
-          break;
-        case 'bodyType':
-          filtered = filtered.filter(v => v.bodyType === filter.value);
-          break;
-        case 'transmission':
-          filtered = filtered.filter(v => v.transmission === filter.value);
-          break;
-        case 'fuelType':
-          filtered = filtered.filter(v => v.fuelType === filter.value);
-          break;
-      }
-    });
-
-    // Apply detailed filters
-    if (detailedFilters) {
-      // Price range
-      if (detailedFilters.priceRange.min > 0 || detailedFilters.priceRange.max < 20000000) {
-        filtered = filtered.filter(
-          v =>
-            v.price >= detailedFilters.priceRange.min &&
-            v.price <= detailedFilters.priceRange.max
-        );
-      }
-
-      // Year range
-      if (detailedFilters.yearRange.min > 2000 || detailedFilters.yearRange.max < 2025) {
-        filtered = filtered.filter(
-          v =>
-            v.year >= detailedFilters.yearRange.min &&
-            v.year <= detailedFilters.yearRange.max
-        );
-      }
-
-      // Mileage range
-      if (detailedFilters.mileageRange.min > 0 || detailedFilters.mileageRange.max < 200000) {
-        const mileageInKm = (v: Vehicle) => {
-          const match = v.mileage.match(/[\d,]+/);
-          return match ? parseInt(match[0].replace(/,/g, '')) : 0;
-        };
-        filtered = filtered.filter(
-          v =>
-            mileageInKm(v) >= detailedFilters.mileageRange.min &&
-            mileageInKm(v) <= detailedFilters.mileageRange.max
-        );
-      }
-
-      // Multi-select filters
-      if (detailedFilters.brands.length > 0) {
-        filtered = filtered.filter(v => detailedFilters.brands.includes(v.make));
-      }
-      if (detailedFilters.bodyTypes.length > 0) {
-        filtered = filtered.filter(v => detailedFilters.bodyTypes.includes(v.bodyType));
-      }
-      if (detailedFilters.transmissions.length > 0) {
-        filtered = filtered.filter(v => detailedFilters.transmissions.includes(v.transmission));
-      }
-      if (detailedFilters.fuelTypes.length > 0) {
-        filtered = filtered.filter(v => detailedFilters.fuelTypes.includes(v.fuelType));
-      }
-      if (detailedFilters.colors.length > 0) {
-        filtered = filtered.filter(v => detailedFilters.colors.includes(v.color));
-      }
-      if (detailedFilters.condition.length > 0) {
-        filtered = filtered.filter(v => detailedFilters.condition.includes(v.condition));
-      }
-      if (detailedFilters.features.length > 0) {
-        filtered = filtered.filter(v =>
-          detailedFilters.features.some(feature => v.features.includes(feature))
-        );
-      }
-    }
-
-    // Apply sorting
-    switch (sortBy) {
-      case 'newest':
-        filtered.sort((a, b) => b.year - a.year || new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-        break;
-      case 'price-low':
-        filtered.sort((a, b) => a.price - b.price);
-        break;
-      case 'price-high':
-        filtered.sort((a, b) => b.price - a.price);
-        break;
-      case 'year-new':
-        filtered.sort((a, b) => b.year - a.year);
-        break;
-      case 'year-old':
-        filtered.sort((a, b) => a.year - b.year);
-        break;
-      case 'mileage':
-        filtered.sort((a, b) => {
-          const getMileage = (v: Vehicle) => {
-            const match = v.mileage.match(/[\d,]+/);
-            return match ? parseInt(match[0].replace(/,/g, '')) : 0;
-          };
-          return getMileage(a) - getMileage(b);
-        });
-        break;
-    }
-
-    setFilteredVehicles(filtered);
-  }, [searchQuery, sortBy, activeQuickFilters, detailedFilters]);
+  // Map database vehicles to component format
+  const displayVehicles = vehicles.map(v => ({
+    id: v.id,
+    make: v.make,
+    model: v.model,
+    year: v.year,
+    price: v.price,
+    oldPrice: v.on_deal && v.deal_description ? undefined : undefined,
+    mileage: v.mileage ? `${v.mileage.toLocaleString()} km` : 'N/A',
+    transmission: v.transmission || 'N/A',
+    fuelType: v.fuel_type || 'N/A',
+    bodyType: v.body_type || 'N/A',
+    color: v.color || 'N/A',
+    condition: 'Foreign Used', // Default for now
+    location: 'Nairobi', // Default for now
+    images: v.vehicle_images && v.vehicle_images.length > 0
+      ? v.vehicle_images
+          .sort((a, b) => (a.display_order || 0) - (b.display_order || 0))
+          .map(img => img.url)
+      : ['https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=800&h=600&fit=crop'], // Fallback placeholder
+    badges: v.tags as ('NEW' | 'HOT DEAL' | 'LIMITED')[] | undefined,
+    isSaved: savedVehicles.has(v.id),
+    featured: v.featured || false,
+    tagline: v.description?.substring(0, 50),
+    features: v.features || [],
+    description: v.description || '',
+    engineSize: 'N/A', // Not in database yet
+    drivetrain: 'N/A', // Not in database yet
+    seats: 5, // Default
+    doors: 4, // Default
+    createdAt: v.created_at || new Date().toISOString(),
+  }));
 
   const handleQuickFilterSelect = (filter: QuickFilter) => {
     setActiveQuickFilters(prev => {
@@ -227,7 +214,13 @@ export default function MikkiTradeMotorsPage() {
 
       {/* Hero Carousel - Featured Vehicles */}
       <div className="mt-16 md:mt-20">
-        <HeroCarousel vehicles={featuredVehicles} autoPlayInterval={6000} />
+        {featuredLoading ? (
+          <div className="h-96 bg-gray-200 animate-pulse flex items-center justify-center">
+            <p className="text-gray-500">Loading featured vehicles...</p>
+          </div>
+        ) : (
+          <HeroCarousel vehicles={featuredVehicles} autoPlayInterval={6000} />
+        )}
       </div>
 
       {/* Quick Filters */}
@@ -245,12 +238,18 @@ export default function MikkiTradeMotorsPage() {
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
               Available Vehicles
             </h1>
-            <p className="text-gray-600">
-              Showing {filteredVehicles.length} of {mockVehicles.length} vehicles
-              {searchQuery && (
-                <span className="font-semibold"> matching "{searchQuery}"</span>
-              )}
-            </p>
+            {loading ? (
+              <p className="text-gray-600">Loading vehicles...</p>
+            ) : error ? (
+              <p className="text-red-600">Error loading vehicles. Please try again.</p>
+            ) : (
+              <p className="text-gray-600">
+                Showing {vehicles.length} of {pagination?.total || 0} vehicles
+                {searchQuery && (
+                  <span className="font-semibold"> matching "{searchQuery}"</span>
+                )}
+              </p>
+            )}
           </div>
 
           {/* Desktop Sort (mobile sort is in navbar) */}
@@ -271,8 +270,44 @@ export default function MikkiTradeMotorsPage() {
           </div>
         </div>
 
+        {/* Loading State */}
+        {loading && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
+                <div className="h-48 bg-gray-300"></div>
+                <div className="p-4 space-y-3">
+                  <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                  <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+                  <div className="h-4 bg-gray-300 rounded w-2/3"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && !loading && (
+          <div className="text-center py-16">
+            <div className="text-6xl mb-4">⚠️</div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              Failed to load vehicles
+            </h2>
+            <p className="text-gray-600 mb-6">
+              {error.message || 'An error occurred. Please try again later.'}
+            </p>
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="px-6 py-3 bg-gradient-to-r from-[#a235c3] to-[#2b404f] text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+            >
+              Retry
+            </button>
+          </div>
+        )}
+
         {/* No Results Message */}
-        {filteredVehicles.length === 0 && (
+        {!loading && !error && displayVehicles.length === 0 && (
           <div className="text-center py-16">
             <div className="text-6xl mb-4">🚗</div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
@@ -296,7 +331,7 @@ export default function MikkiTradeMotorsPage() {
         )}
 
         {/* Vehicle Grid/List */}
-        {filteredVehicles.length > 0 && (
+        {!loading && !error && displayVehicles.length > 0 && (
           <div
             className={
               viewMode === 'grid'
@@ -304,13 +339,10 @@ export default function MikkiTradeMotorsPage() {
                 : 'flex flex-col gap-6'
             }
           >
-            {filteredVehicles.map(vehicle => (
+            {displayVehicles.map(vehicle => (
               <VehicleCard
                 key={vehicle.id}
-                vehicle={{
-                  ...vehicle,
-                  isSaved: savedVehicles.has(vehicle.id),
-                }}
+                vehicle={vehicle}
                 viewMode={viewMode}
                 onSaveToggle={handleSaveToggle}
               />
@@ -319,7 +351,7 @@ export default function MikkiTradeMotorsPage() {
         )}
 
         {/* Load More (Future Enhancement) */}
-        {filteredVehicles.length > 0 && filteredVehicles.length >= 12 && (
+        {!loading && !error && displayVehicles.length > 0 && pagination?.hasNextPage && (
           <div className="text-center mt-12">
             <button
               type="button"

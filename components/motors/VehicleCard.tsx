@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Heart, Phone, ChevronLeft, ChevronRight } from 'lucide-react';
+import { formatCurrency } from '@/lib/utils/formatNumber';
 
 interface Vehicle {
   id: string;
@@ -62,14 +63,6 @@ export default function VehicleCard({
     onSaveToggle?.(vehicle.id);
   };
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-KE', {
-      style: 'currency',
-      currency: 'KES',
-      minimumFractionDigits: 0,
-    }).format(price);
-  };
-
   const badgeStyles = {
     NEW: 'bg-gradient-to-r from-green-500 to-emerald-600 text-white',
     'HOT DEAL': 'bg-gradient-to-r from-red-500 to-orange-600 text-white',
@@ -78,7 +71,7 @@ export default function VehicleCard({
 
   const whatsappNumber = '254708149430';
   const whatsappMessage = encodeURIComponent(
-    `Hi, I'm interested in the ${vehicle.year} ${vehicle.make} ${vehicle.model} (${formatPrice(vehicle.price)})`
+    `Hi, I'm interested in the ${vehicle.year} ${vehicle.make} ${vehicle.model} (${formatCurrency(vehicle.price)})`
   );
 
   if (viewMode === 'list') {
@@ -201,11 +194,11 @@ export default function VehicleCard({
               <div className="mb-4">
                 {vehicle.oldPrice && (
                   <span className="text-lg text-gray-400 line-through mr-3">
-                    {formatPrice(vehicle.oldPrice)}
+                    {formatCurrency(vehicle.oldPrice)}
                   </span>
                 )}
                 <span className="text-3xl font-bold bg-gradient-to-r from-[#a235c3] to-[#2b404f] bg-clip-text text-transparent">
-                  {formatPrice(vehicle.price)}
+                  {formatCurrency(vehicle.price)}
                 </span>
               </div>
 
@@ -355,11 +348,11 @@ export default function VehicleCard({
         <div className="mb-4">
           {vehicle.oldPrice && (
             <div className="text-sm text-gray-400 line-through">
-              {formatPrice(vehicle.oldPrice)}
+              {formatCurrency(vehicle.oldPrice)}
             </div>
           )}
           <div className="text-2xl font-bold bg-gradient-to-r from-[#a235c3] to-[#2b404f] bg-clip-text text-transparent">
-            {formatPrice(vehicle.price)}
+            {formatCurrency(vehicle.price)}
           </div>
         </div>
 

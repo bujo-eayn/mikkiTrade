@@ -34,7 +34,7 @@ const generateVehicleImages = (make: string, model: string, count: number = 5): 
   const baseUrls = [
     'https://images.unsplash.com/photo-1494976388531-d1058494cdd8', // Luxury car
     'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf', // Sports car
-    'https://images.unsplash.com/photo-1469285994282-454ceb49e1f9', // SUV
+    'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b', // SUV
     'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2', // Modern car
     'https://images.unsplash.com/photo-1503376780353-7e6692767b70', // Classic car
     'https://images.unsplash.com/photo-1552519507-da3b142c6e3d', // Sedan
